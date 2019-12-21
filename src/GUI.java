@@ -51,6 +51,8 @@ public class GUI {
 		JButton loadProjectBtn = new JButton("Load Project");
 		loadProjectBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				MainFrame m = new MainFrame();
+				frame.setVisible(false);
 			}
 		});
 		loadProjectBtn.setBounds(99, 168, 132, 23);
