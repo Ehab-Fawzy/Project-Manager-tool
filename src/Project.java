@@ -29,4 +29,9 @@ public class Project {
 	public void loadFromDatabase() {
 		
 	}
+	public Project load(String name) {
+		//
+		//
+		return this;
+	}
 }
