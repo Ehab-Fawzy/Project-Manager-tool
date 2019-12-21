@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Task {
@@ -6,8 +7,11 @@ public class Task {
 	int workinghours; //maybe days
 	String delivaerable;
 	Date startDate, DueDate;
+	ArrayList<Task> subtasks;
+
 	
 	Task(){	
+		subtasks = new ArrayList<Task>();
 	}
 	
 	Task(String Taskname, int workinghours, Date StartDate, Date DueDates , String deliverables){
@@ -15,6 +19,7 @@ public class Task {
 		this.startDate = StartDate;
 		this.DueDate = DueDates;
 		this.delivaerable = deliverables;
+		subtasks = new ArrayList<Task>();
 	}
 	
 	public void saveToDatabase() {
