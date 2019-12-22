@@ -8,6 +8,7 @@ public class Task {
 	int workinghours, ActualWorkingHours, TaskID; 
 	String delivaerable;
 	Date startDate, DueDate;
+	public static Vector<Task> Members;
 	public static Vector<Task> subtasks;
 	private static String SQL ;
 	private static Connection connection;
@@ -33,6 +34,13 @@ public class Task {
 		 SQL =  "jdbc:sqlserver://localhost:1433;databaseName=projectManagerTool;integratedSecurity=true";
 	     Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 	     connection = DriverManager.getConnection(SQL);
+	}
+	public static class Member
+	{
+		String MemberName ;
+		String MemberTitle;
+		int WorkingHours ;
+		
 	}
 	public static void main(String[] args) throws Throwable {
 		Task t = new Task ("Develop", 50 , new Date(15-11-1999) , new Date(20/11/1999) , "No" , 20 ) ;
@@ -107,5 +115,33 @@ public class Task {
 			}
 		return Return;	
 	}
+	public Vector<Member> loadMembers (int TaskId) throws Throwable
+	{
+		Vector <Member> members = new Vector <Member> () ; 
+        String sql = "SELECT * FROM taskMember where TaskID = '" + TaskId + "'" ;
+        Statement statement = connection.createStatement();
+        PreparedStatement pst = connection.prepareStatement(sql);
+        ResultSet rs = pst.executeQuery();
+		 while (rs.next()) {   
+			    Member m  = new Member();   
+			    m.MemberName = rs.getString("MemberName") ;
+			    m.MemberTitle = rs.getString("MemberTitle") ;
+			    m.WorkingHours = rs.getInt("WorkingHours");
+			    members.add(m) ;                                  
+			}
+		return members;		
+	}
+	public void addMember (int TaskId,Member m) throws Throwable
+	{
+        String sql = "INSERT INTO taskMember(TaskID,MemberName,WorkingHours,MemberTitle) VALUES(?,?,?,?)";
+        PreparedStatement pstmt = connection.prepareStatement(sql) ;	
+        
+        pstmt.setInt(1, TaskId);
+        pstmt.setString(2, m.MemberName);
+        pstmt.setInt(3, m.WorkingHours);
+        pstmt.setString(4,m.MemberTitle);
+        pstmt.executeUpdate();		
+	}
+	
 
 }
