@@ -6,6 +6,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 
 public class CreateProjectForm {
@@ -117,6 +121,26 @@ public class CreateProjectForm {
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//createProject
+				Project p = null;
+				try {
+					p = new Project();
+				
+					p.name = name_TF.getText();
+					p.startDay = startDay_TF.getText();
+					p.cost = Integer.parseInt(cost_TF.getText());
+					p.hoursPerDay = Integer.parseInt(hoursPerDay_TF.getText());
+					SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yyyy");  
+					java.util.Date dateUtil = (Date) formatter.parse(startingDate_TF.getText());
+					java.sql.Date sqlDate = new java.sql.Date(dateUtil.getTime());
+					p.StartingDate = sqlDate;
+					dateUtil = (Date) formatter.parse(dueDate_TF.getText());
+					sqlDate = new java.sql.Date(dateUtil.getTime());
+					p.DueDates = sqlDate;
+					p.add();
+				}  catch (Throwable t) {	
+					t.printStackTrace();
+				}
+				
 				GUI.showFrame();
 				frame.dispose();
 			}

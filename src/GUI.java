@@ -11,7 +11,7 @@ import javax.swing.JTextField;
 public class GUI {
 
 	private static JFrame frame;
-	private JTextField textField;
+	private JTextField projectName_TF;
 
 	/**
 	 * Launch the application.
@@ -51,7 +51,12 @@ public class GUI {
 		JButton loadProjectBtn = new JButton("Load Project");
 		loadProjectBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				MainFrame m = new MainFrame();
+				try {
+					MainFrame m = new MainFrame(projectName_TF.getText());
+				} catch (Throwable e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				frame.setVisible(false);
 			}
 		});
@@ -72,9 +77,9 @@ public class GUI {
 		lblNewLabel.setBounds(32, 103, 73, 14);
 		frame.getContentPane().add(lblNewLabel);
 		
-		textField = new JTextField();
-		textField.setBounds(115, 100, 184, 20);
-		frame.getContentPane().add(textField);
-		textField.setColumns(10);
+		projectName_TF = new JTextField();
+		projectName_TF.setBounds(115, 100, 184, 20);
+		frame.getContentPane().add(projectName_TF);
+		projectName_TF.setColumns(10);
 	}
 }

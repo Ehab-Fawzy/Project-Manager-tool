@@ -5,6 +5,9 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 
 public class AddTaskForm {
@@ -16,7 +19,7 @@ public class AddTaskForm {
 	private JTextField dueDate_TF;
 	private JTextField deliverable_TF;
 	private JTextField taskName_TF;
-
+	private int projectID;
 	/**
 	 * Launch the application.
 	 */
@@ -37,6 +40,11 @@ public class AddTaskForm {
 	 * Create the application.
 	 */
 	public AddTaskForm() {
+		initialize();
+		frame.setVisible(true);
+	}
+	public AddTaskForm(int projectID) {
+		this.projectID = projectID;
 		initialize();
 		frame.setVisible(true);
 	}
@@ -99,8 +107,24 @@ public class AddTaskForm {
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//Add Task to table1
+				try {
+					Task t = new Task();
+					t.Taskname = taskName_TF.getText();
+					t.workinghours = Integer.parseInt(workingHours_TF.getText());
+					t.delivaerable = deliverable_TF.getText();
+					SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yyyy"); 
+					java.util.Date dateUtil = (Date) formatter.parse(startDate_TF.getText());
+					java.sql.Date sqlDate = new java.sql.Date(dateUtil.getTime());
+					t.startDate = sqlDate;
+					dateUtil = (Date) formatter.parse(dueDate_TF.getText());
+					sqlDate = new java.sql.Date(dateUtil.getTime());
+					t.DueDate = sqlDate;
+					t.addTask(projectID);
+					MainFrame.showFrame();
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
 				frame.dispose();
-				MainFrame.showFrame();
 			}
 		});
 		button.setBounds(154, 291, 89, 23);

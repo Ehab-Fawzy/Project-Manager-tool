@@ -3,6 +3,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.util.Date;
+import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JTree;
@@ -15,23 +16,25 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 
 public class MainFrame {
 
 	private static JFrame frame;
-
 	private JTable table1;
 	private JTable table2;
 	private JScrollPane scrollPane1;
 	private JScrollPane scrollPane2;
 	static DefaultTableModel model ;
-	private DefaultTableModel model1 ;
+	private static DefaultTableModel model1 ;
 	private DefaultTableModel model2 ;
 	private JTextField textField;
 	private JTextField textField_2;
 	private JButton btnNewButton_3;
 	private JButton btnNewButton_4;
+	private static Project project;
+	private static Vector<Task> tasks;
 
 	/**
 	 * Launch the application.
@@ -48,8 +51,11 @@ public class MainFrame {
 			}
 		});
 	}
-	public static void showFrame() {
+	public static void showFrame() throws Throwable {
 		frame.setVisible(true);
+		if (tasks != null)
+			tasks.clear();
+		loadData();
 	}
 	/**
 	 * Create the application.
@@ -58,7 +64,27 @@ public class MainFrame {
 		initialize();
 		frame.setVisible(true);
 	}
-
+	public MainFrame(String projectName) throws Throwable {
+		Project temp = new Project();
+		this.project = temp.load(projectName);
+		initialize();
+		frame.setVisible(true);
+		loadData();
+	}
+	public static void setTasks(Vector<Task> v ) {
+		tasks = v;
+	}
+	private static void loadData() throws Throwable {
+		Project temp = new Project();
+		project = temp.load(project.name);
+		Vector<Task> tasks = project.tasks;
+		if (model != null) {
+			model.setRowCount(0);
+		}
+		for( int i=0 ; i<tasks.size() ; i++) {
+			model.addRow(new Object[] {0,tasks.get(i).TaskID, tasks.get(i).Taskname, tasks.get(i).workinghours, tasks.get(i).startDate, tasks.get(i).DueDate, tasks.get(i).delivaerable});
+		}
+	}
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -80,7 +106,7 @@ public class MainFrame {
 		JButton btnNewButton_1 = new JButton("Add Task");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AddTaskForm addTaskForm = new AddTaskForm();
+				AddTaskForm addTaskForm = new AddTaskForm(project.projectId);
 				frame.setVisible(false);
 			}
 		});
