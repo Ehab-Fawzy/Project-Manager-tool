@@ -27,7 +27,6 @@ public class MainFrame {
 	private JScrollPane scrollPane1;
 	private JScrollPane scrollPane2;
 	static DefaultTableModel model ;
-	private static DefaultTableModel model1 ;
 	private DefaultTableModel model2 ;
 	private JTextField textField;
 	private JTextField textField_2;
@@ -35,6 +34,7 @@ public class MainFrame {
 	private JButton btnNewButton_4;
 	private static Project project;
 	private static Vector<Task> tasks;
+	private JTextField TaskID_TF;
 
 	/**
 	 * Launch the application.
@@ -157,6 +157,24 @@ public class MainFrame {
 		btnNewButton_4.setBounds(146, 497, 170, 23);
 		frame.getContentPane().add(btnNewButton_4);
 		
+		JButton showSubTasks = new JButton("Show Subtasks");
+		showSubTasks.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					showSubtasks form = new showSubtasks(Integer.parseInt(TaskID_TF.getText()));
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
+			}
+		});
+		showSubTasks.setBounds(326, 497, 121, 23);
+		frame.getContentPane().add(showSubTasks);
+		
+		TaskID_TF = new JTextField();
+		TaskID_TF.setColumns(10);
+		TaskID_TF.setBounds(459, 498, 143, 20);
+		frame.getContentPane().add(TaskID_TF);
+		
 		
 	}
 
@@ -181,7 +199,7 @@ public class MainFrame {
 		scrollPane1.setBounds(31, 47, 571, 396);
 		scrollPane1.setPreferredSize(new Dimension(100, 226));	
 			
-		table2 = new JTable(new DefaultTableModel(new Object[]{"Name", "Task"},0));
+		table2 = new JTable(new DefaultTableModel(new Object[]{"Name","Title", "Task"},0));
 		table2.setBounds(500, 28, 292, 392);
 		table2.setFont(new Font("Consolas", Font.BOLD, 14));
 		table2.setFillsViewportHeight(true);
