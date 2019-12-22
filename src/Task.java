@@ -97,11 +97,11 @@ public class Task {
         ResultSet rs = pst.executeQuery();
 		 while (rs.next()) {   
 			    Task t = new Task();   
-			    t.Taskname = rs.getString("subTaskName") ;
+			    t.Taskname = rs.getString("SubTaskName") ;
 			    t.workinghours = rs.getInt("WorkingHours") ;
-			    t.delivaerable = rs.getString("TaskDilevrable") ;
-			    t.startDate = rs.getDate("TaskStartDate") ;
-			    t.DueDate = rs.getDate("TaskDueDate") ;
+			    t.delivaerable = rs.getString("SubTaskDilevrable") ;
+			    t.startDate = rs.getDate("SubTaskStartDate") ;
+			    t.DueDate = rs.getDate("SubTaskDueDate") ;
 			    t.ActualWorkingHours = rs.getInt("ActualWorkingHours");
 			    Return.add(t) ;                                  
 			}
