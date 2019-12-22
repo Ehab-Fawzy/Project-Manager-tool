@@ -10,6 +10,7 @@ public class Task {
 	Date startDate, DueDate;
 	public static Vector<Member> Members;
 	public static Vector<Task> subtasks;
+	public static Vector<Integer> predecessor;
 	private static String SQL ;
 	private static Connection connection;
 
@@ -148,6 +149,30 @@ public class Task {
         pstmt.setInt(4, m.WorkingHours);
         pstmt.setString(5,m.MemberTitle);
         pstmt.executeUpdate();		
+	}
+	public void addPredecessor() throws Throwable
+	{
+		String sql = "INSERT INTO taskPredecessor(TaskID,PredecessorTaskID) VALUES(?,?)";
+		PreparedStatement pstmt = connection.prepareStatement(sql) ;	
+		for (int i = 0 ; i < predecessor.size();i++)
+		{	
+	        pstmt.setInt(1, this.TaskID);
+	        pstmt.setInt(2, predecessor.get(i));
+	        pstmt.executeUpdate();		
+		}
+	}
+	public static Vector<Integer> loadPredecessor(int TaskId) throws Throwable
+	{
+		Vector <Integer> p = new Vector <Integer> () ;
+        String sql = "SELECT * FROM taskPredecessor where TaskID = '" + TaskId + "'" ;
+        Statement statement = connection.createStatement();
+        PreparedStatement pst = connection.prepareStatement(sql);
+        ResultSet rs = pst.executeQuery();
+		 while (rs.next()) {   
+	           p.add(rs.getInt("PredecessorTaskID"));		       
+			}
+        return p;
+		
 	}
 	
 
