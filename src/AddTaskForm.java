@@ -63,7 +63,7 @@ public class AddTaskForm {
 		preID_TF.setBounds(157, 100, 197, 20);
 		frame.getContentPane().add(preID_TF);
 		
-		JLabel lblPredecessorId = new JLabel("Predecessor ID");
+		JLabel lblPredecessorId = new JLabel("Predecessors ID");
 		lblPredecessorId.setBounds(47, 103, 100, 14);
 		frame.getContentPane().add(lblPredecessorId);
 		
@@ -120,6 +120,12 @@ public class AddTaskForm {
 					sqlDate = new java.sql.Date(dateUtil.getTime());
 					t.DueDate = sqlDate;
 					t.addTask(projectID);
+					
+					String[] split = preID_TF.getText().split(",");
+					for (int i=0 ; i<split.length ; i++) {
+						t.predecessor.add(Integer.parseInt(split[i]));
+					}
+					t.addPredecessor();
 					MainFrame.showFrame();
 				} catch (Throwable t) {
 					t.printStackTrace();
@@ -139,5 +145,4 @@ public class AddTaskForm {
 		lblTaskName.setBounds(47, 72, 100, 14);
 		frame.getContentPane().add(lblTaskName);
 	}
-
 }

@@ -22,7 +22,7 @@ public class Task {
 	     connection = DriverManager.getConnection(SQL);
 			Members = new Vector<Task.Member>();
 
-
+		predecessor = new Vector<Integer>();
 	}
 	
 	Task(String Taskname, int workinghours, Date StartDate, Date DueDates , String deliverables,int ActualWorkingHours) throws ClassNotFoundException, SQLException{
@@ -34,6 +34,7 @@ public class Task {
 		this.workinghours = workinghours ;
 		
 		subtasks = new Vector<Task>();
+		predecessor = new Vector<Integer>();
 		Members = new Vector<Task.Member>();
 		 SQL =  "jdbc:sqlserver://localhost:1433;databaseName=projectManagerTool;integratedSecurity=true";
 	     Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
@@ -73,6 +74,7 @@ public class Task {
 		    subtasks = t.loadSubTasks(t.TaskID);
 		    v.add(t) ;                          
 		}
+		 
 		return v;
 	}
 	public void addTask (int ProjectId) throws Throwable {
@@ -85,7 +87,14 @@ public class Task {
         pstmt.setDate(5, this.startDate);
         pstmt.setDate(6, this.DueDate);
         pstmt.setInt(7, this.ActualWorkingHours);
-        pstmt.executeUpdate();		
+        pstmt.executeUpdate();	
+
+		String sql2 = "select TaskID from task where TaskName = '" + Taskname + "' and ProjectID = '" + ProjectId + "'";
+	    PreparedStatement pstmt2 = connection.prepareStatement(sql2) ;
+	    ResultSet rs = pstmt2.executeQuery();
+	    while (rs.next()) {
+	    	this.TaskID = rs.getInt("TaskID");
+	    }
 	}
 	public void addSubTask (int TaskId) throws Throwable
 	{
@@ -174,6 +183,4 @@ public class Task {
         return p;
 		
 	}
-	
-
 }

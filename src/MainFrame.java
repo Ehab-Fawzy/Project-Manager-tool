@@ -84,7 +84,15 @@ public class MainFrame {
 			model.setRowCount(0);
 		}
 		for( int i=0 ; i<tasks.size() ; i++) {
-			model.addRow(new Object[] {0,tasks.get(i).TaskID, tasks.get(i).Taskname, tasks.get(i).workinghours, tasks.get(i).startDate, tasks.get(i).DueDate, tasks.get(i).delivaerable});
+			String s = new String();
+			Vector<Integer> pre = Task.loadPredecessor(tasks.get(i).TaskID);
+			for (int j=0 ; j<pre.size() ; j++){
+				if (j != pre.size() -1)
+					s += (pre.get(j) + ",");
+				else
+					s += pre.get(j);
+			}
+			model.addRow(new Object[] {s,tasks.get(i).TaskID, tasks.get(i).Taskname, tasks.get(i).workinghours, tasks.get(i).startDate, tasks.get(i).DueDate, tasks.get(i).delivaerable});
 		}
 		Vector<Task.Member> members = temp.loadMembers();
 		if (model2 != null) {
@@ -193,7 +201,7 @@ public class MainFrame {
 		TaskID_TF.setColumns(10);
 		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
+			groupLayout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(286)
 					.addComponent(lblNewLabel, GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
@@ -202,31 +210,32 @@ public class MainFrame {
 					.addGap(20))
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(31)
-					.addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 571, Short.MAX_VALUE)
-					.addGap(25)
-					.addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
-					.addGap(33))
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(31)
-					.addComponent(btnAddSubtask, GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnNewButton_1, GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-					.addGap(311)
-					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 127, GroupLayout.PREFERRED_SIZE)
-					.addGap(11)
-					.addComponent(memberTaskID_TF, GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)
-					.addGap(33))
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-					.addGap(31)
-					.addComponent(btnNewButton_3, GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
-					.addGap(10)
-					.addComponent(btnNewButton_4, GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-					.addGap(13)
-					.addComponent(btnAddProjectMembers, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
-					.addGap(176)
-					.addComponent(showSubTasks, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
-					.addGap(12)
-					.addComponent(TaskID_TF, GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 573, Short.MAX_VALUE)
+							.addGap(25))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(btnNewButton_3, GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+							.addGap(10)
+							.addComponent(btnNewButton_4, GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+							.addGap(13)
+							.addComponent(btnAddProjectMembers, GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
+							.addGap(176))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(btnAddSubtask, GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(btnNewButton_1, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
+							.addGap(316)))
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+							.addComponent(btnNewButton, GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+							.addGap(11)
+							.addComponent(memberTaskID_TF, GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE))
+						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+							.addComponent(showSubTasks, GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+							.addGap(12)
+							.addComponent(TaskID_TF, GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE))
+						.addComponent(scrollPane2, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE))
 					.addGap(33))
 		);
 		groupLayout.setVerticalGroup(
@@ -247,19 +256,19 @@ public class MainFrame {
 						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 							.addComponent(btnAddSubtask)
 							.addComponent(btnNewButton_1))
-						.addComponent(btnNewButton)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(1)
-							.addComponent(memberTaskID_TF, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(memberTaskID_TF, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(btnNewButton))
 					.addGap(11)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addComponent(btnNewButton_3)
 						.addComponent(btnNewButton_4)
 						.addComponent(btnAddProjectMembers)
-						.addComponent(showSubTasks)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(1)
-							.addComponent(TaskID_TF, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(TaskID_TF, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(showSubTasks))
 					.addGap(17))
 		);
 		frame.getContentPane().setLayout(groupLayout);
