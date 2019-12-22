@@ -8,13 +8,13 @@ public class Task {
 	int workinghours, ActualWorkingHours, TaskID; 
 	String delivaerable;
 	Date startDate, DueDate;
-	ArrayList<Task> subtasks;
+	public static Vector<Task> subtasks;
 	private static String SQL ;
 	private static Connection connection;
 
 	
 	Task() throws ClassNotFoundException, SQLException{	
-		subtasks = new ArrayList<Task>();
+		subtasks = new Vector<Task>();
 		 SQL =  "jdbc:sqlserver://localhost:1433;databaseName=projectManagerTool;integratedSecurity=true";
 	     Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 	     connection = DriverManager.getConnection(SQL);
@@ -29,7 +29,7 @@ public class Task {
 		this.ActualWorkingHours= ActualWorkingHours ;
 		this.workinghours = workinghours ;
 		
-		subtasks = new ArrayList<Task>();
+		subtasks = new Vector<Task>();
 		 SQL =  "jdbc:sqlserver://localhost:1433;databaseName=projectManagerTool;integratedSecurity=true";
 	     Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 	     connection = DriverManager.getConnection(SQL);
@@ -57,6 +57,7 @@ public class Task {
 		    t.startDate = rs.getDate("TaskStartDate") ;
 		    t.DueDate = rs.getDate("TaskDueDate") ;
 		    t.ActualWorkingHours = rs.getInt("ActualWorkingHours");
+		    subtasks = t.loadSubTasks(rs.getInt("TaskID"));
 		    v.add(t) ;
 		                                   
 		}
@@ -67,14 +68,39 @@ public class Task {
         PreparedStatement pstmt = connection.prepareStatement(sql) ;
         pstmt.setInt(1, ProjectId);
         pstmt.setString(2, this.Taskname);
+        pstmt.executeUpdate();		
+	}
+	public void addSubTask (int TaskId) throws Throwable
+	{
+        String sql = "INSERT INTO subTasks(subTaskID,TaskID,WorkingHours,SubTaskDilevrable,SubTaskStartDate,SubTaskDueDate,ActualWorkingHours) VALUES(?,?,?,?,?,?,?)";
+        PreparedStatement pstmt = connection.prepareStatement(sql) ;
+        pstmt.setInt(1,this.TaskID);
+        pstmt.setInt(2, TaskId);
         pstmt.setInt(3, this.workinghours);
         pstmt.setString(4, this.delivaerable);
         pstmt.setDate(5, this.startDate);
         pstmt.setDate(6, this.DueDate);
         pstmt.setInt(7, this.ActualWorkingHours);
-        pstmt.executeUpdate();
-
-		
+        pstmt.executeUpdate();	
+	}
+	public Vector<Task> loadSubTasks (int TaskId) throws Throwable
+	{
+		Vector <Task> Return = new Vector <Task> () ; 
+        String sql = "SELECT * FROM subTasks where TaskID = '" + TaskId + "'" ;
+        Statement statement = connection.createStatement();
+        PreparedStatement pst = connection.prepareStatement(sql);
+        ResultSet rs = pst.executeQuery();
+		 while (rs.next()) {   
+			    Task t = new Task();   
+			    t.Taskname = rs.getString("Taskname") ;
+			    t.workinghours = rs.getInt("WorkingHours") ;
+			    t.delivaerable = rs.getString("TaskDilevrable") ;
+			    t.startDate = rs.getDate("TaskStartDate") ;
+			    t.DueDate = rs.getDate("TaskDueDate") ;
+			    t.ActualWorkingHours = rs.getInt("ActualWorkingHours");
+			    Return.add(t) ;                                  
+			}
+		return Return;	
 	}
 
 }
