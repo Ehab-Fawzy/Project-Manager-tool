@@ -51,15 +51,15 @@ public class Task {
 		
 		 while (rs.next()) {   
 		    Task t = new Task();   
+		    t.TaskID = rs.getInt("TaskID");
 		    t.Taskname = rs.getString("Taskname") ;
 		    t.workinghours = rs.getInt("WorkingHours") ;
 		    t.delivaerable = rs.getString("TaskDilevrable") ;
 		    t.startDate = rs.getDate("TaskStartDate") ;
 		    t.DueDate = rs.getDate("TaskDueDate") ;
 		    t.ActualWorkingHours = rs.getInt("ActualWorkingHours");
-		    subtasks = t.loadSubTasks(rs.getInt("TaskID"));
-		    v.add(t) ;
-		                                   
+		    subtasks = t.loadSubTasks(t.TaskID);
+		    v.add(t) ;                          
 		}
 		return v;
 	}
@@ -68,13 +68,18 @@ public class Task {
         PreparedStatement pstmt = connection.prepareStatement(sql) ;
         pstmt.setInt(1, ProjectId);
         pstmt.setString(2, this.Taskname);
+        pstmt.setInt(3, this.workinghours);
+        pstmt.setString(4, this.delivaerable);
+        pstmt.setDate(5, this.startDate);
+        pstmt.setDate(6, this.DueDate);
+        pstmt.setInt(7, this.ActualWorkingHours);
         pstmt.executeUpdate();		
 	}
 	public void addSubTask (int TaskId) throws Throwable
 	{
-        String sql = "INSERT INTO subTasks(subTaskID,TaskID,WorkingHours,SubTaskDilevrable,SubTaskStartDate,SubTaskDueDate,ActualWorkingHours) VALUES(?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO subTasks(subTaskName,TaskID,WorkingHours,SubTaskDilevrable,SubTaskStartDate,SubTaskDueDate,ActualWorkingHours) VALUES(?,?,?,?,?,?,?)";
         PreparedStatement pstmt = connection.prepareStatement(sql) ;
-        pstmt.setInt(1,this.TaskID);
+        pstmt.setString(1,this.Taskname);
         pstmt.setInt(2, TaskId);
         pstmt.setInt(3, this.workinghours);
         pstmt.setString(4, this.delivaerable);
@@ -92,7 +97,7 @@ public class Task {
         ResultSet rs = pst.executeQuery();
 		 while (rs.next()) {   
 			    Task t = new Task();   
-			    t.Taskname = rs.getString("Taskname") ;
+			    t.Taskname = rs.getString("subTaskName") ;
 			    t.workinghours = rs.getInt("WorkingHours") ;
 			    t.delivaerable = rs.getString("TaskDilevrable") ;
 			    t.startDate = rs.getDate("TaskStartDate") ;

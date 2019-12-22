@@ -4,6 +4,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.awt.event.ActionEvent;
 
 public class AddSubtaskForm {
 
@@ -104,6 +108,28 @@ public class AddSubtaskForm {
 		frame.getContentPane().add(label_5);
 		
 		JButton submitBtn = new JButton("Submit");
+		submitBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Task t = new Task();
+					t.Taskname = Subtask_TF.getText();
+					t.workinghours = Integer.parseInt(workingHours_TF.getText());
+					t.delivaerable = deliverable_TF.getText();
+					SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yyyy"); 
+					java.util.Date dateUtil = (Date) formatter.parse(startDate_TF.getText());
+					java.sql.Date sqlDate = new java.sql.Date(dateUtil.getTime());
+					t.startDate = sqlDate;
+					dateUtil = (Date) formatter.parse(dueDate_TF.getText());
+					sqlDate = new java.sql.Date(dateUtil.getTime());
+					t.DueDate = sqlDate;
+					t.addSubTask(Integer.parseInt(TaskID_TF.getText()));
+					MainFrame.showFrame();
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
+				frame.dispose();
+			}
+		});
 		submitBtn.setBounds(164, 280, 89, 23);
 		frame.getContentPane().add(submitBtn);
 		

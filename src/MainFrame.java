@@ -133,6 +133,8 @@ public class MainFrame {
 		JButton btnAddSubtask = new JButton("Add subtask");
 		btnAddSubtask.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				AddSubtaskForm form = new AddSubtaskForm();
+				frame.setVisible(false);
 			}
 		});
 		btnAddSubtask.setBounds(31, 463, 105, 23);
