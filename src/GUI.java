@@ -74,7 +74,7 @@ public class GUI {
 		frame.getContentPane().add(btnNewButton_1);
 		
 		JLabel lblNewLabel = new JLabel("Project Name");
-		lblNewLabel.setBounds(32, 103, 73, 14);
+		lblNewLabel.setBounds(26, 103, 95, 14);
 		frame.getContentPane().add(lblNewLabel);
 		
 		projectName_TF = new JTextField();

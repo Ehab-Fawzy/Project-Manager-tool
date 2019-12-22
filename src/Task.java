@@ -9,11 +9,9 @@ public class Task {
 	String delivaerable;
 	Date startDate, DueDate;
 	public static Vector<Member> Members;
-	public static Vector<Integer> predecessor;
 	public static Vector<Task> subtasks;
 	private static String SQL ;
 	private static Connection connection;
-	
 
 	
 	Task() throws ClassNotFoundException, SQLException{	
@@ -117,10 +115,10 @@ public class Task {
 			    t.DueDate = rs.getDate("SubTaskDueDate") ;
 			    t.ActualWorkingHours = rs.getInt("ActualWorkingHours");
 			    Return.add(t) ;                                  
-			}
+		}
 		return Return;	
 	}
-	public Vector<Member> loadMembers (int TaskId) throws Throwable
+	public static Vector<Member> loadMembers (int TaskId) throws Throwable
 	{
 		Vector <Member> members = new Vector <Member> () ; 
         String sql = "SELECT * FROM taskMember where TaskID = '" + TaskId + "'" ;
@@ -140,8 +138,7 @@ public class Task {
 	{
 		String sql = "delete from taskMember where MemberName = '"+ m.MemberName + "' and TaskID = -1" ;
 		PreparedStatement pstmt = connection.prepareStatement(sql) ;	
-        pstmt.executeUpdate();		
-		
+        pstmt.executeUpdate();
 		
 		sql = "INSERT INTO taskMember(ProjectID,TaskID,MemberName,WorkingHours,MemberTitle) VALUES(?,?,?,?,?)";
 		pstmt = connection.prepareStatement(sql);
@@ -152,31 +149,6 @@ public class Task {
         pstmt.setString(5,m.MemberTitle);
         pstmt.executeUpdate();		
 	}
-	public void addPredecessor() throws Throwable
-	{
-		String sql = "INSERT INTO taskPredecessor(TaskID,PredecessorTaskID) VALUES(?,?)";
-		PreparedStatement pstmt = connection.prepareStatement(sql) ;	
-		for (int i = 0 ; i < predecessor.size();i++)
-		{	
-	        pstmt.setInt(1, this.TaskID);
-	        pstmt.setInt(2, predecessor.get(i));
-	        pstmt.executeUpdate();		
-		}
-	}
-	public static Vector<Integer> loadPredecessor(int TaskId) throws Throwable
-	{
-		Vector <Integer> p = new Vector <Integer> () ;
-        String sql = "SELECT * FROM taskPredecessor where TaskID = '" + TaskId + "'" ;
-        Statement statement = connection.createStatement();
-        PreparedStatement pst = connection.prepareStatement(sql);
-        ResultSet rs = pst.executeQuery();
-		 while (rs.next()) {   
-	           p.add(rs.getInt("PredecessorTaskID"));		       
-			}
-        return p;
-		
-	}
-	
 	
 
 }
