@@ -18,6 +18,9 @@ import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.awt.event.ActionEvent;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class MainFrame {
 
@@ -27,9 +30,8 @@ public class MainFrame {
 	private JScrollPane scrollPane1;
 	private JScrollPane scrollPane2;
 	static DefaultTableModel model ;
-	private DefaultTableModel model2 ;
-	private JTextField textField;
-	private JTextField textField_2;
+	private static DefaultTableModel model2 ;
+	private static JTextField memberTaskID_TF;
 	private JButton btnNewButton_3;
 	private JButton btnNewButton_4;
 	private static Project project;
@@ -84,6 +86,24 @@ public class MainFrame {
 		for( int i=0 ; i<tasks.size() ; i++) {
 			model.addRow(new Object[] {0,tasks.get(i).TaskID, tasks.get(i).Taskname, tasks.get(i).workinghours, tasks.get(i).startDate, tasks.get(i).DueDate, tasks.get(i).delivaerable});
 		}
+		Vector<Task.Member> members = temp.loadMembers();
+		if (model2 != null) {
+			model2.setRowCount(0);
+		}
+		for( int i=0 ; i<members.size() ; i++) {
+			model2.addRow(new Object[] {members.get(i).MemberName, members.get(i).MemberTitle, '-', '-'});
+		}
+		
+		
+	}
+	public static void loadTaskMembers() throws Throwable {
+		Vector<Task.Member> members = Task.loadMembers(Integer.parseInt(memberTaskID_TF.getText()));
+		if (model2 != null) {
+			model2.setRowCount(0);
+		}
+		for( int i=0 ; i<members.size() ; i++) {
+			model2.addRow(new Object[] {members.get(i).MemberName, members.get(i).MemberTitle, memberTaskID_TF.getText(), members.get(i).WorkingHours});
+		}
 	}
 	/**
 	 * Initialize the contents of the frame.
@@ -92,16 +112,21 @@ public class MainFrame {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 957, 576);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
 
 		initializeTables();
-		frame.getContentPane().add(scrollPane1);
-		frame.getContentPane().add(scrollPane2);
 		
 		
 		JButton btnNewButton = new JButton("Show Members");
-		btnNewButton.setBounds(627, 463, 127, 23);
-		frame.getContentPane().add(btnNewButton);
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					loadTaskMembers();
+				} catch (Throwable e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 		
 		JButton btnNewButton_1 = new JButton("Add Task");
 		btnNewButton_1.addActionListener(new ActionListener() {
@@ -110,25 +135,17 @@ public class MainFrame {
 				frame.setVisible(false);
 			}
 		});
-		btnNewButton_1.setBounds(146, 463, 170, 23);
-		frame.getContentPane().add(btnNewButton_1);
 		
 		
 		
 		JLabel lblNewLabel = new JLabel("Tasks");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblNewLabel.setBounds(286, 22, 69, 14);
-		frame.getContentPane().add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("Members");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblNewLabel_1.setBounds(739, 25, 182, 14);
-		frame.getContentPane().add(lblNewLabel_1);
 		
-		textField = new JTextField();
-		textField.setBounds(765, 464, 143, 20);
-		frame.getContentPane().add(textField);
-		textField.setColumns(10);
+		memberTaskID_TF = new JTextField();
+		memberTaskID_TF.setColumns(10);
 		
 		JButton btnAddSubtask = new JButton("Add subtask");
 		btnAddSubtask.addActionListener(new ActionListener() {
@@ -137,25 +154,29 @@ public class MainFrame {
 				frame.setVisible(false);
 			}
 		});
-		btnAddSubtask.setBounds(31, 463, 105, 23);
-		frame.getContentPane().add(btnAddSubtask);
 		
 		JButton btnAddProjectMembers = new JButton("Add Member");
-		btnAddProjectMembers.setBounds(627, 497, 127, 23);
-		frame.getContentPane().add(btnAddProjectMembers);
-		
-		textField_2 = new JTextField();
-		textField_2.setBounds(765, 498, 143, 20);
-		frame.getContentPane().add(textField_2);
-		textField_2.setColumns(10);
+		btnAddProjectMembers.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AddProjectMember form = new AddProjectMember(project);
+				frame.setVisible(false);
+			}
+		});
 		
 		btnNewButton_3 = new JButton("Show Chart");
-		btnNewButton_3.setBounds(31, 497, 105, 23);
-		frame.getContentPane().add(btnNewButton_3);
 		
 		btnNewButton_4 = new JButton("Assign Task Members");
-		btnNewButton_4.setBounds(146, 497, 170, 23);
-		frame.getContentPane().add(btnNewButton_4);
+		btnNewButton_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					System.out.println("");
+					addTaskMember form = new addTaskMember(project);
+					frame.setVisible(false);
+				} catch (Throwable e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
 		
 		JButton showSubTasks = new JButton("Show Subtasks");
 		showSubTasks.addActionListener(new ActionListener() {
@@ -167,13 +188,81 @@ public class MainFrame {
 				}
 			}
 		});
-		showSubTasks.setBounds(326, 497, 121, 23);
-		frame.getContentPane().add(showSubTasks);
 		
 		TaskID_TF = new JTextField();
 		TaskID_TF.setColumns(10);
-		TaskID_TF.setBounds(459, 498, 143, 20);
-		frame.getContentPane().add(TaskID_TF);
+		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(286)
+					.addComponent(lblNewLabel, GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
+					.addGap(384)
+					.addComponent(lblNewLabel_1, GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
+					.addGap(20))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(31)
+					.addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 571, Short.MAX_VALUE)
+					.addGap(25)
+					.addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
+					.addGap(33))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(31)
+					.addComponent(btnAddSubtask, GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(btnNewButton_1, GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+					.addGap(311)
+					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 127, GroupLayout.PREFERRED_SIZE)
+					.addGap(11)
+					.addComponent(memberTaskID_TF, GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)
+					.addGap(33))
+				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+					.addGap(31)
+					.addComponent(btnNewButton_3, GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+					.addGap(10)
+					.addComponent(btnNewButton_4, GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+					.addGap(13)
+					.addComponent(btnAddProjectMembers, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+					.addGap(176)
+					.addComponent(showSubTasks, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
+					.addGap(12)
+					.addComponent(TaskID_TF, GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)
+					.addGap(33))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(22)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(3)
+							.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)))
+					.addGap(8)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
+						.addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE))
+					.addGap(20)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+							.addComponent(btnAddSubtask)
+							.addComponent(btnNewButton_1))
+						.addComponent(btnNewButton)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(1)
+							.addComponent(memberTaskID_TF, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+					.addGap(11)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnNewButton_3)
+						.addComponent(btnNewButton_4)
+						.addComponent(btnAddProjectMembers)
+						.addComponent(showSubTasks)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(1)
+							.addComponent(TaskID_TF, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+					.addGap(17))
+		);
+		frame.getContentPane().setLayout(groupLayout);
 		
 		
 	}
@@ -196,10 +285,9 @@ public class MainFrame {
 		table1.getColumnModel().getColumn(3).setMinWidth(100);
 		
 		scrollPane1 = new JScrollPane(table1);
-		scrollPane1.setBounds(31, 47, 571, 396);
 		scrollPane1.setPreferredSize(new Dimension(100, 226));	
 			
-		table2 = new JTable(new DefaultTableModel(new Object[]{"Name","Title", "Task"},0));
+		table2 = new JTable(new DefaultTableModel(new Object[]{"Name","Title", "Task", "Working Hours"},0));
 		table2.setBounds(500, 28, 292, 392);
 		table2.setFont(new Font("Consolas", Font.BOLD, 14));
 		table2.setFillsViewportHeight(true);
@@ -210,7 +298,6 @@ public class MainFrame {
 		model2 = (DefaultTableModel) table2.getModel();
 		
 		scrollPane2 = new JScrollPane(table2);
-		scrollPane2.setBounds(627, 47, 281, 396);
 		scrollPane2.setPreferredSize(new Dimension(100, 226));
 		
 	}

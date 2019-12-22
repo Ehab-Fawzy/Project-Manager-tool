@@ -118,7 +118,7 @@ public class Task {
 		}
 		return Return;	
 	}
-	public Vector<Member> loadMembers (int TaskId) throws Throwable
+	public static Vector<Member> loadMembers (int TaskId) throws Throwable
 	{
 		Vector <Member> members = new Vector <Member> () ; 
         String sql = "SELECT * FROM taskMember where TaskID = '" + TaskId + "'" ;
@@ -138,10 +138,7 @@ public class Task {
 	{
 		String sql = "delete from taskMember where MemberName = '"+ m.MemberName + "' and TaskID = -1" ;
 		PreparedStatement pstmt = connection.prepareStatement(sql) ;	
-        pstmt.executeUpdate();		
-		
-		
-		
+        pstmt.executeUpdate();
 		
 		sql = "INSERT INTO taskMember(ProjectID,TaskID,MemberName,WorkingHours,MemberTitle) VALUES(?,?,?,?,?)";
 		pstmt = connection.prepareStatement(sql);
