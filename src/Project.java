@@ -90,7 +90,7 @@ public class Project {
 	public Vector<Task.Member> loadMembers() throws Throwable{
 		Vector <Task.Member> members = new Vector <Task.Member> () ; 
 		ProjectMembers = new Vector<Task.Member>();
-        String sql = "SELECT DISTINCT * FROM taskMember where ProjectID = '" + this.projectId + "'" ;
+        String sql = "SELECT DISTINCT MemberName,MemberTitle FROM taskMember where ProjectID = '" + this.projectId + "'" ;
         Statement statement = connection.createStatement();
         PreparedStatement pst = connection.prepareStatement(sql);
         ResultSet rs = pst.executeQuery();
@@ -98,7 +98,6 @@ public class Project {
 			    Task.Member m  = new Task.Member();   
 			    m.MemberName = rs.getString("MemberName") ;
 			    m.MemberTitle = rs.getString("MemberTitle") ;
-			    m.WorkingHours = rs.getInt("WorkingHours");
 			    members.add(m) ;
 			    ProjectMembers.add(m);
 			}
