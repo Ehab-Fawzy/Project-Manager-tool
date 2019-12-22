@@ -8,6 +8,7 @@ public class Task {
 	int workinghours, ActualWorkingHours, TaskID; 
 	String delivaerable;
 	Date startDate, DueDate;
+	public static Vector<Member> Members;
 	public static Vector<Task> subtasks;
 	private static String SQL ;
 	private static Connection connection;
@@ -18,6 +19,8 @@ public class Task {
 		 SQL =  "jdbc:sqlserver://localhost:1433;databaseName=projectManagerTool;integratedSecurity=true";
 	     Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 	     connection = DriverManager.getConnection(SQL);
+			Members = new Vector<Task.Member>();
+
 
 	}
 	
@@ -30,9 +33,17 @@ public class Task {
 		this.workinghours = workinghours ;
 		
 		subtasks = new Vector<Task>();
+		Members = new Vector<Task.Member>();
 		 SQL =  "jdbc:sqlserver://localhost:1433;databaseName=projectManagerTool;integratedSecurity=true";
 	     Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 	     connection = DriverManager.getConnection(SQL);
+	}
+	public static class Member
+	{
+		String MemberName ;
+		String MemberTitle;
+		int WorkingHours ;
+		
 	}
 	public static void main(String[] args) throws Throwable {
 		Task t = new Task ("Develop", 50 , new Date(15-11-1999) , new Date(20/11/1999) , "No" , 20 ) ;
@@ -107,5 +118,40 @@ public class Task {
 		}
 		return Return;	
 	}
+	public Vector<Member> loadMembers (int TaskId) throws Throwable
+	{
+		Vector <Member> members = new Vector <Member> () ; 
+        String sql = "SELECT * FROM taskMember where TaskID = '" + TaskId + "'" ;
+        Statement statement = connection.createStatement();
+        PreparedStatement pst = connection.prepareStatement(sql);
+        ResultSet rs = pst.executeQuery();
+		 while (rs.next()) {   
+			    Member m  = new Member();   
+			    m.MemberName = rs.getString("MemberName") ;
+			    m.MemberTitle = rs.getString("MemberTitle") ;
+			    m.WorkingHours = rs.getInt("WorkingHours");
+			    members.add(m) ;                                  
+			}
+		return members;		
+	}
+	public static void addMember (int TaskId,Member m,int ProjectId) throws Throwable
+	{
+		String sql = "delete from taskMember where MemberName = '"+ m.MemberName + "' and TaskID = -1" ;
+		PreparedStatement pstmt = connection.prepareStatement(sql) ;	
+        pstmt.executeUpdate();		
+		
+		
+		
+		
+		sql = "INSERT INTO taskMember(ProjectID,TaskID,MemberName,WorkingHours,MemberTitle) VALUES(?,?,?,?,?)";
+		pstmt = connection.prepareStatement(sql);
+        pstmt.setInt(1, ProjectId);
+        pstmt.setInt(2, TaskId);
+        pstmt.setString(3, m.MemberName);
+        pstmt.setInt(4, m.WorkingHours);
+        pstmt.setString(5,m.MemberTitle);
+        pstmt.executeUpdate();		
+	}
+	
 
 }

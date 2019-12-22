@@ -11,6 +11,7 @@ public class Project {
 	 Date DueDates ;
 	 int hoursPerDay, ActualProjectHours;
 	 Vector<Task> tasks;
+	 Vector<Task.Member> ProjectMembers;
 	 private static String SQL ;
 	 private static Connection connection;
 	
@@ -19,6 +20,7 @@ public class Project {
 		 SQL =  "jdbc:sqlserver://localhost:1433;databaseName=projectManagerTool;integratedSecurity=true";
 	     Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 	     connection = DriverManager.getConnection(SQL);
+	     ProjectMembers = new Vector<Task.Member>();
 
 	 }
 	 
@@ -31,6 +33,7 @@ public class Project {
 		this.startDay = startDay;
 		this.hoursPerDay = hoursPerDay;
 		this.ActualProjectHours = ActualProjectHourst;
+	     ProjectMembers = new Vector<Task.Member>();
 		tasks = new Vector<Task>();
 		 SQL =  "jdbc:sqlserver://localhost:1433;databaseName=projectManagerTool;integratedSecurity=true";
 	     Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
@@ -79,6 +82,26 @@ public class Project {
         pstmt.setInt(7, this.ActualProjectHours);
         pstmt.executeUpdate();
     
+	}
+	public void addMembers(Task.Member m) throws Throwable {
+		Task.addMember(-1, m ,this.projectId);
+	}
+	
+	public Vector<Task.Member> loadMembers() throws Throwable{
+		Vector <Task.Member> members = new Vector <Task.Member> () ; 
+		ProjectMembers = new Vector<Task.Member>();
+        String sql = "SELECT DISTINCT MemberName,MemberTitle FROM taskMember where ProjectID = '" + this.projectId + "'" ;
+        Statement statement = connection.createStatement();
+        PreparedStatement pst = connection.prepareStatement(sql);
+        ResultSet rs = pst.executeQuery();
+		 while (rs.next()) {   
+			    Task.Member m  = new Task.Member();   
+			    m.MemberName = rs.getString("MemberName") ;
+			    m.MemberTitle = rs.getString("MemberTitle") ;
+			    members.add(m) ;
+			    ProjectMembers.add(m);
+			}
+		return members;	
 	}
 	
 }
