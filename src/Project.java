@@ -1,25 +1,29 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Vector;
 
 
 public class Project {
+	 int projectId ;
 	 String name ,startDay;
 	 int cost;
 	 Date StartingDate;
 	 Date DueDates ;
 	 int hoursPerDay, ActualProjectHours;
-	 ArrayList<Task> tasks;
+	 Vector<Task> tasks;
+	 private static String SQL ;
+	 private static Connection connection;
 	
-	 public Project() {
-		 tasks = new ArrayList<Task>();
+	 public Project() throws ClassNotFoundException, SQLException {
+		 tasks = new Vector<Task>();
+		 SQL =  "jdbc:sqlserver://localhost:1433;databaseName=projectManagerTool;integratedSecurity=true";
+	     Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+	     connection = DriverManager.getConnection(SQL);
+
 	 }
 	 
 	 
-	 public Project ( String name, int cost, Date StartingDate, Date DueDates , String startDay, int hoursPerDay, int ActualProjectHourst) {
+	 public Project ( String name, int cost, Date StartingDate, Date DueDates , String startDay, int hoursPerDay, int ActualProjectHourst) throws ClassNotFoundException, SQLException {
 		this.name = name;
 		this.cost = cost;
 		this.StartingDate = StartingDate;
@@ -27,62 +31,53 @@ public class Project {
 		this.startDay = startDay;
 		this.hoursPerDay = hoursPerDay;
 		this.ActualProjectHours = ActualProjectHourst;
-		tasks = new ArrayList<Task>();
-	 }
-	public static void main(String[] args) throws ClassNotFoundException, SQLException {
-		String SQL = "jdbc:sqlserver://LAPTOP-M7JGO3P2:1433;databaseName=Library;integratedSecurity=true";
-		Project p = new Project ("Hatem",50,new Date(15-11-1999),new Date(20/11/1999),"Friday",50,20) ;
-		p.add();
-		
+		tasks = new Vector<Task>();
+		 SQL =  "jdbc:sqlserver://localhost:1433;databaseName=projectManagerTool;integratedSecurity=true";
+	     Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+	     connection = DriverManager.getConnection(SQL);
 
+	 }
+	 
+	public static void main(String[] args) throws Throwable {
+		//Project p = new Project ("Hatem",50,new Date(15-11-1999),new Date(20/11/1999),"Friday",50,20) ;
+		//p.add();
+		Project p = new Project() ;
+		p.load("Hatem") ;
+		System.out.println("Name: "  + p.name + "Cost: "+ p.cost + " Date: " + p.StartingDate + " ID:" +p.projectId) ;
+		System.out.println(p.tasks.get(0).Taskname);
 	}
-	public Project load(String name) {
-		String Projectname = null; //"SELECT Name FROM project WHERE name = name " ;
-		int cost = 0; // SELECT cost FROM project WHERE name = name "
-		Date Start = null ; // SELECT startingday FROM project WHERE name = name "
-		Date DueDates = null ; // SELECT DueDates FROM project WHERE name = name "
-		String StartDay = null ; // SELECT StartDay FROM project WHERE name = name "
-		int hoursPerDay = 0 ;// // SELECT StartDay FROM project WHERE name = name "
-		int ActualProjectHours = 0 ;// // SELECT StartDay FROM project WHERE name = name "
-		
-		
-		this.name = Projectname;
-		this.cost = cost;
-		this.StartingDate = Start;
-		this.DueDates = DueDates;
-		this.startDay = StartDay;
-		this.hoursPerDay = hoursPerDay;
-		this.ActualProjectHours = ActualProjectHours;
-		
+	public Project load(String name) throws SQLException, Throwable {
+        String sql = "SELECT * FROM Project  Where ProjectName = '" + name+"'" ;
+        PreparedStatement pst = connection.prepareStatement(sql);
+        ResultSet rs = pst.executeQuery();
+		 while (rs.next()) {     
+			    this.projectId = rs.getInt("ProjectID");
+			    this.name = rs.getString("ProjectName") ;
+			    this.cost = rs.getInt("ProjectCost") ;
+			    this.StartingDate = rs.getDate("ProjectStartDate") ;
+			    this.DueDates = rs.getDate("ProjectDueDate") ;
+			    this.startDay = rs.getString("StartDayOfWeek") ;
+			    this.hoursPerDay = rs.getInt("HoursPerDay") ;
+			    this.ActualProjectHours = rs.getInt("ActualProjectHours") ;	    
+		}
+ 	
+			Task t = new Task () ;
+			tasks = t.load(projectId) ;
 		return this;
 	}
 	public void add () throws SQLException, ClassNotFoundException
 	{
-		String SQL = "jdbc:sqlserver://LAPTOP-M7JGO3P2:1433;databaseName=Library;integratedSecurity=true";
-        //String sql = "INSERT INTO Project (name, cost,StartingDate ,DueDates ,startDay,hoursPerDay,ActualProjectHours,) VALUES (this.name, this.cost, this.StartingDate, this.DueDates,this.startDay,this.hoursPerDay,this.ActualProjectHours,)";
         String sql = "INSERT INTO Project(ProjectName,ProjectCost,ProjectStartDate,ProjectDueDate,StartDayOfWeek,HoursPerDay,ActualProjectHours) VALUES(?,?,?,?,?,?,?)";
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection connection = (Connection) DriverManager.getConnection(SQL);
-        
+                
         PreparedStatement pstmt = connection.prepareStatement(sql) ;
         pstmt.setString(1, this.name);
         pstmt.setInt(2, this.cost);
-        pstmt.setDate(3, (java.sql.Date) this.StartingDate);
-        pstmt.setDate(4, (java.sql.Date) this.DueDates);
+        pstmt.setDate(3, this.StartingDate);
+        pstmt.setDate(4, this.DueDates);
         pstmt.setString(5, this.startDay);
-        pstmt.setInt(2, this.hoursPerDay);
-        pstmt.setInt(2, this.ActualProjectHours);
+        pstmt.setInt(6, this.hoursPerDay);
+        pstmt.setInt(7, this.ActualProjectHours);
         pstmt.executeUpdate();
-
-
-
-        
-
-        
-        
-        
-        pstmt.executeUpdate();
-       
     
 	}
 	
