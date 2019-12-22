@@ -8,7 +8,7 @@ public class Task {
 	int workinghours, ActualWorkingHours, TaskID; 
 	String delivaerable;
 	Date startDate, DueDate;
-	public static Vector<Task> Members;
+	public static Vector<Member> Members;
 	public static Vector<Task> subtasks;
 	private static String SQL ;
 	private static Connection connection;
@@ -19,6 +19,8 @@ public class Task {
 		 SQL =  "jdbc:sqlserver://localhost:1433;databaseName=projectManagerTool;integratedSecurity=true";
 	     Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 	     connection = DriverManager.getConnection(SQL);
+			Members = new Vector<Task.Member>();
+
 
 	}
 	
@@ -31,6 +33,7 @@ public class Task {
 		this.workinghours = workinghours ;
 		
 		subtasks = new Vector<Task>();
+		Members = new Vector<Task.Member>();
 		 SQL =  "jdbc:sqlserver://localhost:1433;databaseName=projectManagerTool;integratedSecurity=true";
 	     Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 	     connection = DriverManager.getConnection(SQL);
@@ -131,15 +134,22 @@ public class Task {
 			}
 		return members;		
 	}
-	public void addMember (int TaskId,Member m) throws Throwable
+	public static void addMember (int TaskId,Member m,int ProjectId) throws Throwable
 	{
-        String sql = "INSERT INTO taskMember(TaskID,MemberName,WorkingHours,MemberTitle) VALUES(?,?,?,?)";
-        PreparedStatement pstmt = connection.prepareStatement(sql) ;	
-        
-        pstmt.setInt(1, TaskId);
-        pstmt.setString(2, m.MemberName);
-        pstmt.setInt(3, m.WorkingHours);
-        pstmt.setString(4,m.MemberTitle);
+		String sql = "delete from taskMember where MemberName = '"+ m.MemberName + "' and TaskID = -1" ;
+		PreparedStatement pstmt = connection.prepareStatement(sql) ;	
+        pstmt.executeUpdate();		
+		
+		
+		
+		
+		sql = "INSERT INTO taskMember(ProjectID,TaskID,MemberName,WorkingHours,MemberTitle) VALUES(?,?,?,?,?)";
+		pstmt = connection.prepareStatement(sql);
+        pstmt.setInt(1, ProjectId);
+        pstmt.setInt(2, TaskId);
+        pstmt.setString(3, m.MemberName);
+        pstmt.setInt(4, m.WorkingHours);
+        pstmt.setString(5,m.MemberTitle);
         pstmt.executeUpdate();		
 	}
 	
