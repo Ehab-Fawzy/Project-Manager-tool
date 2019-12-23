@@ -52,7 +52,7 @@ public class AddProjectMember {
 		JButton btnAdd = new JButton("Add");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Task.Member m = new  Task.Member();
+				ProjectTask.Member m = new  ProjectTask.Member();
 				m.MemberName = name_TF.getText();
 				m.MemberTitle = title_TF.getText();
 				try {

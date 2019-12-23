@@ -2,30 +2,30 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Vector;
 
-public class Task {
+public class ProjectTask {
 	
 	String Taskname ; 
 	int workinghours, ActualWorkingHours, TaskID; 
 	String delivaerable;
 	public Date startDate, DueDate;
 	public static Vector<Member> Members;
-	public static Vector<Task> subtasks;
+	public static Vector<ProjectTask> subtasks;
 	public static Vector<Integer> predecessor;
 	private static String SQL ;
 	private static Connection connection;
 
 	
-	Task() throws ClassNotFoundException, SQLException{	
-		subtasks = new Vector<Task>();
+	ProjectTask() throws ClassNotFoundException, SQLException{	
+		subtasks = new Vector<ProjectTask>();
 		 SQL =  "jdbc:sqlserver://localhost:1433;databaseName=projectManagerTool;integratedSecurity=true";
 	     Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 	     connection = DriverManager.getConnection(SQL);
-			Members = new Vector<Task.Member>();
+			Members = new Vector<ProjectTask.Member>();
 
 		predecessor = new Vector<Integer>();
 	}
 	
-	Task(String Taskname, int workinghours, Date StartDate, Date DueDates , String deliverables,int ActualWorkingHours) throws ClassNotFoundException, SQLException{
+	ProjectTask(String Taskname, int workinghours, Date StartDate, Date DueDates , String deliverables,int ActualWorkingHours) throws ClassNotFoundException, SQLException{
 		this.Taskname = Taskname;
 		this.startDate = StartDate;
 		this.DueDate = DueDates;
@@ -33,9 +33,9 @@ public class Task {
 		this.ActualWorkingHours= ActualWorkingHours ;
 		this.workinghours = workinghours ;
 		
-		subtasks = new Vector<Task>();
+		subtasks = new Vector<ProjectTask>();
 		predecessor = new Vector<Integer>();
-		Members = new Vector<Task.Member>();
+		Members = new Vector<ProjectTask.Member>();
 		 SQL =  "jdbc:sqlserver://localhost:1433;databaseName=projectManagerTool;integratedSecurity=true";
 	     Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 	     connection = DriverManager.getConnection(SQL);
@@ -48,22 +48,22 @@ public class Task {
 		
 	}
 	public static void main(String[] args) throws Throwable {
-		Task t = new Task ("Develop", 50 , new Date(15-11-1999) , new Date(20/11/1999) , "No" , 20 ) ;
+		ProjectTask t = new ProjectTask ("Develop", 50 , new Date(15-11-1999) , new Date(20/11/1999) , "No" , 20 ) ;
 		t.addTask(2);
 		//Project p = new Project() ;
 		//p.load("Hatem") ;
 		//System.out.println("Name: "  + p.name + "Cost: "+ p.cost + " Date: " + p.StartingDate + " ID:" +p.projectId) ;
 	}
-	public static Vector<Task> load(int projectId) throws Throwable
+	public static Vector<ProjectTask> load(int projectId) throws Throwable
 	{
-		Vector<Task> v = new Vector<Task>() ;
+		Vector<ProjectTask> v = new Vector<ProjectTask>() ;
         String sql = "SELECT* FROM Task INNER JOIN Project ON Task.projectID = Project.ProjectID and Task.ProjectID = " + projectId;
         Statement statement = connection.createStatement();
         PreparedStatement pst = connection.prepareStatement(sql);
         ResultSet rs = pst.executeQuery();
 		
 		 while (rs.next()) {   
-		    Task t = new Task();   
+		    ProjectTask t = new ProjectTask();   
 		    t.TaskID = rs.getInt("TaskID");
 		    t.Taskname = rs.getString("Taskname") ;
 		    t.workinghours = rs.getInt("WorkingHours") ;
@@ -110,15 +110,15 @@ public class Task {
         pstmt.setInt(7, this.ActualWorkingHours);
         pstmt.executeUpdate();	
 	}
-	public Vector<Task> loadSubTasks (int TaskId) throws Throwable
+	public Vector<ProjectTask> loadSubTasks (int TaskId) throws Throwable
 	{
-		Vector <Task> Return = new Vector <Task> () ; 
+		Vector <ProjectTask> Return = new Vector <ProjectTask> () ; 
         String sql = "SELECT * FROM subTasks where TaskID = '" + TaskId + "'" ;
         Statement statement = connection.createStatement();
         PreparedStatement pst = connection.prepareStatement(sql);
         ResultSet rs = pst.executeQuery();
 		 while (rs.next()) {   
-			    Task t = new Task();   
+			    ProjectTask t = new ProjectTask();   
 			    t.Taskname = rs.getString("SubTaskName") ;
 			    t.workinghours = rs.getInt("WorkingHours") ;
 			    t.delivaerable = rs.getString("SubTaskDilevrable") ;

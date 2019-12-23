@@ -18,7 +18,7 @@ public class addTaskMember {
 	private JTextField working_TF;
 	private JTextField taskID_TF;
 	private Project project;
-	private Vector<Task.Member> members;
+	private Vector<ProjectTask.Member> members;
 	private JComboBox comboBox ;
 
 	/**
@@ -71,7 +71,7 @@ public class addTaskMember {
 						try {
 							System.out.println("");
 							members.get(i).WorkingHours = Integer.parseInt(working_TF.getText());
-							Task.addMember(Integer.parseInt(taskID_TF.getText()), members.get(i), project.projectId);
+							ProjectTask.addMember(Integer.parseInt(taskID_TF.getText()), members.get(i), project.projectId);
 							MainFrame.showFrame();
 							frame.dispose();
 						} catch (Throwable t) {

@@ -111,7 +111,7 @@ public class AddSubtaskForm {
 		submitBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					Task t = new Task();
+					ProjectTask t = new ProjectTask();
 					t.Taskname = Subtask_TF.getText();
 					t.workinghours = Integer.parseInt(workingHours_TF.getText());
 					t.delivaerable = deliverable_TF.getText();

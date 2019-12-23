@@ -22,7 +22,7 @@ public class showSubtasks {
 	private JScrollPane scrollPane1;
 	static DefaultTableModel model ;
 	private JButton btnNewButton;
-	private static Vector<Task> subTasks;
+	private static Vector<ProjectTask> subTasks;
 	/**
 	 * Launch the application.
 	 */
@@ -48,7 +48,7 @@ public class showSubtasks {
 	}
 	public showSubtasks(int taskID) throws Throwable {
 		initialize();
-		Task temp = new Task();
+		ProjectTask temp = new ProjectTask();
 		subTasks = temp.loadSubTasks(taskID);
 		frame.setVisible(true);
 		loadData();

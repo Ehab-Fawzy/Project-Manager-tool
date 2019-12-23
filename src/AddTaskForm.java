@@ -108,7 +108,7 @@ public class AddTaskForm {
 			public void actionPerformed(ActionEvent e) {
 				//Add Task to table1
 				try {
-					Task t = new Task();
+					ProjectTask t = new ProjectTask();
 					t.Taskname = taskName_TF.getText();
 					t.workinghours = Integer.parseInt(workingHours_TF.getText());
 					t.delivaerable = deliverable_TF.getText();

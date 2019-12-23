@@ -35,7 +35,7 @@ public class MainFrame {
 	private JButton btnNewButton_3;
 	private JButton btnNewButton_4;
 	private static Project project;
-	private static Vector<Task> tasks;
+	private static Vector<ProjectTask> tasks;
 	private JTextField TaskID_TF;
 
 	/**
@@ -73,19 +73,19 @@ public class MainFrame {
 		frame.setVisible(true);
 		loadData();
 	}
-	public static void setTasks(Vector<Task> v ) {
+	public static void setTasks(Vector<ProjectTask> v ) {
 		tasks = v;
 	}
 	private static void loadData() throws Throwable {
 		Project temp = new Project();
 		project = temp.load(project.name);
-		Vector<Task> tasks = project.tasks;
+		Vector<ProjectTask> tasks = project.tasks;
 		if (model != null) {
 			model.setRowCount(0);
 		}
 		for( int i=0 ; i<tasks.size() ; i++) {
 			String s = new String();
-			Vector<Integer> pre = Task.loadPredecessor(tasks.get(i).TaskID);
+			Vector<Integer> pre = ProjectTask.loadPredecessor(tasks.get(i).TaskID);
 			for (int j=0 ; j<pre.size() ; j++){
 				if (j != pre.size() -1)
 					s += (pre.get(j) + ",");
@@ -94,7 +94,7 @@ public class MainFrame {
 			}
 			model.addRow(new Object[] {s,tasks.get(i).TaskID, tasks.get(i).Taskname, tasks.get(i).workinghours, tasks.get(i).startDate, tasks.get(i).DueDate, tasks.get(i).delivaerable});
 		}
-		Vector<Task.Member> members = temp.loadMembers();
+		Vector<ProjectTask.Member> members = temp.loadMembers();
 		if (model2 != null) {
 			model2.setRowCount(0);
 		}
@@ -105,7 +105,7 @@ public class MainFrame {
 		
 	}
 	public static void loadTaskMembers() throws Throwable {
-		Vector<Task.Member> members = Task.loadMembers(Integer.parseInt(memberTaskID_TF.getText()));
+		Vector<ProjectTask.Member> members = ProjectTask.loadMembers(Integer.parseInt(memberTaskID_TF.getText()));
 		if (model2 != null) {
 			model2.setRowCount(0);
 		}

@@ -36,14 +36,19 @@ public class GanttChartExample extends JFrame {
    }  
   
    private IntervalCategoryDataset getCategoryDataset() {  
-	   TaskSeries series1 = new TaskSeries("Estimated Date"); series1.add(new Task("Requirement",  
+	   TaskSeries task = new TaskSeries("Estimated Date"); task.add(new Task("Requirement",  
 			   Date.from(LocalDate.of(2017,7,3).atStartOfDay().toInstant(ZoneOffset.UTC)),  
 			   Date.from(LocalDate.of(2017, 7,7).atStartOfDay().toInstant(ZoneOffset.UTC))  
 			   ));
 	   
 	   for (int i=0 ; i<tasks.size() ; i++) {
-		   
+		  
 	   }
+	   
+	   TaskSeries series1 = new TaskSeries("Estimated Date"); series1.add(new Task("Requirement",  
+			   Date.from(LocalDate.of(2017,7,3).atStartOfDay().toInstant(ZoneOffset.UTC)),  
+			   Date.from(LocalDate.of(2017, 7,7).atStartOfDay().toInstant(ZoneOffset.UTC))  
+			   ));
         
  series1.add(new Task("Design",Date.from(LocalDate.of(2017, 7,10).atStartOfDay().toInstant(ZoneOffset.UTC)),  
  Date.from(LocalDate.of(2017, 7, 14).atStartOfDay().toInstant(ZoneOffset.UTC))  
