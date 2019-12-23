@@ -25,7 +25,7 @@ public class GanttChartExample extends JFrame {
    private static final long serialVersionUID = 1L;  
    private static Vector<ProjectTask> tasks;
   
-   public GanttChartExample(String title, Vector<ProjectTask> tasks ) {  
+   public GanttChartExample(String title, Vector<ProjectTask> tasks ) throws Throwable {  
       super(title);
       this.tasks = tasks;
       // Create dataset  
@@ -42,25 +42,20 @@ public class GanttChartExample extends JFrame {
       setContentPane(panel);  
    }  
   
-   private IntervalCategoryDataset getCategoryDataset() {  
+   private IntervalCategoryDataset getCategoryDataset() throws Throwable {  
 	   TaskSeries task = new TaskSeries("Task");
 	   
-	   TaskSeries predecessor = new TaskSeries("Predecessor");
+	   TaskSeries predecessor = new TaskSeries("Subtask");
 	   if (tasks != null)
 	   for (int i=0 ; i<tasks.size() ; i++) {
-		  Vector<ProjectTask> vec = tasks.get(i).subtasks;
-  		  Task initial = new Task(tasks.get(i).Taskname + ":", new SimpleTimePeriod(0,1));
-  		  java.util.Date startDate = new java.util.Date(tasks.get(i).startDate.getTime());
+		  Vector<ProjectTask> vec = tasks.get(i).loadSubTasks(tasks.get(i).TaskID);
+		  java.util.Date startDate = new java.util.Date(tasks.get(i).startDate.getTime());
   		  java.util.Date dueDate = new java.util.Date(tasks.get(i).DueDate.getTime());
 		  task.add(new Task(tasks.get(i).Taskname, startDate, dueDate));
 		  for (int j=0 ; j<vec.size() ; j++) {
-			  if (tasks.get(i).startDate.equals(vec.get(j).startDate))
-				  System.out.println("Same");
 			  java.util.Date startDatePre = new java.util.Date(vec.get(j).startDate.getTime());
 			  java.util.Date dueDatePre = new java.util.Date(vec.get(j).DueDate.getTime());
-			  if (startDate == startDatePre || startDate.equals(startDatePre))
-				  System.out.println("Same");
-			  predecessor.add(new Task(vec.get(j).Taskname, startDatePre, dueDatePre));
+			  predecessor.add(new Task(tasks.get(i).Taskname, startDatePre, dueDatePre));
 		  }
 	   }
   
@@ -74,35 +69,41 @@ public class GanttChartExample extends JFrame {
  SwingUtilities.invokeLater(() -> {  
 	 	Vector<ProjectTask> tasks = new Vector<ProjectTask> ();
 	 	try {
-			ProjectTask t = new ProjectTask();
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yyyy"); 
-			java.util.Date dateUtil = (Date) formatter.parse("12/10/2012");
-			java.sql.Date sqlDate = new java.sql.Date(dateUtil.getTime());
+			/*ProjectTask t = new ProjectTask();
+			java.sql.Date sqlDate = new java.sql.Date(1999-1-1);
 			t.startDate = sqlDate;
-			dateUtil = (Date) formatter.parse("12/12/2012");
-			sqlDate = new java.sql.Date(dateUtil.getTime());
-			t.DueDate = sqlDate;
+			System.out.println(t.startDate);
+			java.sql.Date sqlDate2 = new java.sql.Date(1999-1-1);
+			t.DueDate = sqlDate2 ;
 			t.Taskname = "Task";
 			
 			ProjectTask sub = new ProjectTask();
-			java.util.Date dateUtilSub = (Date) formatter.parse("12/10/2012");
-			java.sql.Date sqlDateSub = new java.sql.Date(dateUtil.getTime());
+			java.sql.Date sqlDateSub = new java.sql.Date(1999-1-1);
 			sub.startDate = sqlDateSub;
-			dateUtilSub = (Date) formatter.parse("13/11/2012");
-			sqlDateSub = new java.sql.Date(dateUtilSub.getTime());
-			sub.DueDate = sqlDateSub;
+			java.sql.Date sqlDateSub2 = new java.sql.Date(1999-1-1);
+			System.out.println(sqlDateSub2);
+			sub.DueDate = sqlDateSub2;
 			sub.Taskname = "Task";
-			t.subtasks.add(sub);
-			tasks.add(t);
+			t.subtasks.add(sub);*/
+			Project p = new Project();
+			p.load("khaled");
+			tasks = p.tasks;
+			System.out.println(tasks.get(0).startDate);
 			
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
-	 	GanttChartExample example = new GanttChartExample("Gantt Chart Example",tasks);  
-         example.setSize(800, 400);  
-         example.setLocationRelativeTo(null);  
-         example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);  
-         example.setVisible(true);  
+	 	 GanttChartExample example;
+		try {
+			example = new GanttChartExample("Gantt Chart Example",tasks);
+			example.setSize(800, 400);  
+			example.setLocationRelativeTo(null);  
+			example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);  
+			example.setVisible(true);  
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
       });  
    }  
 }  
