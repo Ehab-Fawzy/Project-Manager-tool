@@ -120,12 +120,14 @@ public class AddTaskForm {
 					sqlDate = new java.sql.Date(dateUtil.getTime());
 					t.DueDate = sqlDate;
 					t.addTask(projectID);
+					if (preID_TF.getText().length() != 0){
+						String[] split = preID_TF.getText().split(",");
 					
-					String[] split = preID_TF.getText().split(",");
-					for (int i=0 ; i<split.length ; i++) {
-						t.predecessor.add(Integer.parseInt(split[i]));
+						for (int i=0 ; i<split.length ; i++) {
+							t.predecessor.add(Integer.parseInt(split[i]));
+						}
+						t.addPredecessor();
 					}
-					t.addPredecessor();
 					MainFrame.showFrame();
 				} catch (Throwable t) {
 					t.printStackTrace();

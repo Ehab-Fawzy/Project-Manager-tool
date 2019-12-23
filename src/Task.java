@@ -57,7 +57,7 @@ public class Task {
 	public static Vector<Task> load(int projectId) throws Throwable
 	{
 		Vector<Task> v = new Vector<Task>() ;
-        String sql = "SELECT* FROM Task INNER JOIN Project ON Task.projectID = Project.projectID; " ;
+        String sql = "SELECT* FROM Task INNER JOIN Project ON Task.projectID = Project.ProjectID and Task.ProjectID = " + projectId;
         Statement statement = connection.createStatement();
         PreparedStatement pst = connection.prepareStatement(sql);
         ResultSet rs = pst.executeQuery();
@@ -87,6 +87,7 @@ public class Task {
         pstmt.setDate(5, this.startDate);
         pstmt.setDate(6, this.DueDate);
         pstmt.setInt(7, this.ActualWorkingHours);
+        System.out.println(ProjectId);
         pstmt.executeUpdate();	
 
 		String sql2 = "select TaskID from task where TaskName = '" + Taskname + "' and ProjectID = '" + ProjectId + "'";
@@ -167,6 +168,8 @@ public class Task {
 		{	
 	        pstmt.setInt(1, this.TaskID);
 	        pstmt.setInt(2, predecessor.get(i));
+	        System.out.println(this.TaskID);
+	        System.out.println(predecessor.get(i));
 	        pstmt.executeUpdate();		
 		}
 	}

@@ -139,6 +139,7 @@ public class MainFrame {
 		JButton btnNewButton_1 = new JButton("Add Task");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				System.out.println("");
 				AddTaskForm addTaskForm = new AddTaskForm(project.projectId);
 				frame.setVisible(false);
 			}
