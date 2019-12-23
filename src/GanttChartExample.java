@@ -1,25 +1,32 @@
+//import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;  
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Date;  
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.Date;
 import javax.swing.JFrame;  
 import javax.swing.SwingUtilities;  
 import javax.swing.WindowConstants;  
+import java.util.Vector;  
 import org.jfree.chart.ChartFactory;  
 import org.jfree.chart.ChartPanel;  
 import org.jfree.chart.JFreeChart;  
 import org.jfree.data.category.IntervalCategoryDataset;  
 import org.jfree.data.gantt.Task;  
 import org.jfree.data.gantt.TaskSeries;  
-import org.jfree.data.gantt.TaskSeriesCollection;  
+import org.jfree.data.gantt.TaskSeriesCollection;
+import org.jfree.data.time.SimpleTimePeriod;
+
   
 public class GanttChartExample extends JFrame {  
   
    private static final long serialVersionUID = 1L;  
-   private static ArrayList<Task> tasks;
+   private static Vector<ProjectTask> tasks;
   
-   public GanttChartExample(String title, ArrayList<Task> tasks ) {  
-      super(title);  
+   public GanttChartExample(String title, Vector<ProjectTask> tasks ) {  
+      super(title);
       this.tasks = tasks;
       // Create dataset  
       IntervalCategoryDataset dataset = getCategoryDataset();  
@@ -36,70 +43,62 @@ public class GanttChartExample extends JFrame {
    }  
   
    private IntervalCategoryDataset getCategoryDataset() {  
-	   TaskSeries task = new TaskSeries("Estimated Date"); task.add(new Task("Requirement",  
-			   Date.from(LocalDate.of(2017,7,3).atStartOfDay().toInstant(ZoneOffset.UTC)),  
-			   Date.from(LocalDate.of(2017, 7,7).atStartOfDay().toInstant(ZoneOffset.UTC))  
-			   ));
+	   TaskSeries task = new TaskSeries("Task");
 	   
+	   TaskSeries predecessor = new TaskSeries("Predecessor");
+	   if (tasks != null)
 	   for (int i=0 ; i<tasks.size() ; i++) {
-		  
+		  Vector<ProjectTask> vec = tasks.get(i).subtasks;
+  		  Task initial = new Task(tasks.get(i).Taskname + ":", new SimpleTimePeriod(0,1));
+  		  java.util.Date startDate = new java.util.Date(tasks.get(i).startDate.getTime());
+  		  java.util.Date dueDate = new java.util.Date(tasks.get(i).DueDate.getTime());
+		  task.add(new Task(tasks.get(i).Taskname, startDate, dueDate));
+		  for (int j=0 ; j<vec.size() ; j++) {
+			  if (tasks.get(i).startDate.equals(vec.get(j).startDate))
+				  System.out.println("Same");
+			  java.util.Date startDatePre = new java.util.Date(vec.get(j).startDate.getTime());
+			  java.util.Date dueDatePre = new java.util.Date(vec.get(j).DueDate.getTime());
+			  if (startDate == startDatePre || startDate.equals(startDatePre))
+				  System.out.println("Same");
+			  predecessor.add(new Task(vec.get(j).Taskname, startDatePre, dueDatePre));
+		  }
 	   }
-	   
-	   TaskSeries series1 = new TaskSeries("Estimated Date"); series1.add(new Task("Requirement",  
-			   Date.from(LocalDate.of(2017,7,3).atStartOfDay().toInstant(ZoneOffset.UTC)),  
-			   Date.from(LocalDate.of(2017, 7,7).atStartOfDay().toInstant(ZoneOffset.UTC))  
-			   ));
-        
- series1.add(new Task("Design",Date.from(LocalDate.of(2017, 7,10).atStartOfDay().toInstant(ZoneOffset.UTC)),  
- Date.from(LocalDate.of(2017, 7, 14).atStartOfDay().toInstant(ZoneOffset.UTC))  
-         ));  
-        
- series1.add(new Task("Coding",Date.from(LocalDate.of(2017, 7,17).atStartOfDay().toInstant(ZoneOffset.UTC)),  
- Date.from(LocalDate.of(2017, 7, 21).atStartOfDay().toInstant(ZoneOffset.UTC))  
-         ));  
-        
- series1.add(new Task("Testing", Date.from(LocalDate.of(2017, 7,24).atStartOfDay().toInstant(ZoneOffset.UTC)),  
- Date.from(LocalDate.of(2017, 7, 28).atStartOfDay().toInstant(ZoneOffset.UTC))  
-         ));  
-        
- series1.add(new Task("Deployment", Date.from(LocalDate.of(2017, 07,31).atStartOfDay().toInstant(ZoneOffset.UTC)),  
- Date.from(LocalDate.of(2017, 8, 4).atStartOfDay().toInstant(ZoneOffset.UTC))  
-         ));  
-        
-        
-TaskSeries series2 = new TaskSeries("Actual Date");  
-series2.add(new Task("Requirement",Date.from(LocalDate.of(2017, 7,3).atStartOfDay().toInstant(ZoneOffset.UTC)),  
-Date.from(LocalDate.of(2017, 7, 05).atStartOfDay().toInstant(ZoneOffset.UTC))  
-         ));  
-        
- series2.add(new Task("Design",  
- Date.from(LocalDate.of(2017, 7, 6).atStartOfDay().toInstant(ZoneOffset.UTC)),  
- Date.from(LocalDate.of(2017, 7, 17).atStartOfDay().toInstant(ZoneOffset.UTC))  
-         ));  
-        
- series2.add(new Task("Coding",  
- Date.from(LocalDate.of(2017, 7, 18).atStartOfDay().toInstant(ZoneOffset.UTC)),  
- Date.from(LocalDate.of(2017, 7, 27).atStartOfDay().toInstant(ZoneOffset.UTC))  
-         ));  
-        
- series2.add(new Task("Testing",  
- Date.from(LocalDate.of(2017, 7, 28).atStartOfDay().toInstant(ZoneOffset.UTC)),  
- Date.from(LocalDate.of(2017, 8, 1).atStartOfDay().toInstant(ZoneOffset.UTC))  
-         ));  
-        
- series2.add(new Task("Deployment",  
- Date.from(LocalDate.of(2017, 8, 2).atStartOfDay().toInstant(ZoneOffset.UTC)),  
- Date.from(LocalDate.of(2017, 8, 4).atStartOfDay().toInstant(ZoneOffset.UTC))  
-         ));  
   
- TaskSeriesCollection dataset = new TaskSeriesCollection();  
- dataset.add(series1);dataset.add(series2);  
- return dataset;  
+	   TaskSeriesCollection dataset = new TaskSeriesCollection();  
+	   dataset.add(task);
+	   dataset.add(predecessor);  
+	   return dataset;  
    }  
   
  public static void main(String[] args) {  
  SwingUtilities.invokeLater(() -> {  
- GanttChartExample example = new GanttChartExample("Gantt Chart Example",null);  
+	 	Vector<ProjectTask> tasks = new Vector<ProjectTask> ();
+	 	try {
+			ProjectTask t = new ProjectTask();
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yyyy"); 
+			java.util.Date dateUtil = (Date) formatter.parse("12/10/2012");
+			java.sql.Date sqlDate = new java.sql.Date(dateUtil.getTime());
+			t.startDate = sqlDate;
+			dateUtil = (Date) formatter.parse("12/12/2012");
+			sqlDate = new java.sql.Date(dateUtil.getTime());
+			t.DueDate = sqlDate;
+			t.Taskname = "Task";
+			
+			ProjectTask sub = new ProjectTask();
+			java.util.Date dateUtilSub = (Date) formatter.parse("12/10/2012");
+			java.sql.Date sqlDateSub = new java.sql.Date(dateUtil.getTime());
+			sub.startDate = sqlDateSub;
+			dateUtilSub = (Date) formatter.parse("13/11/2012");
+			sqlDateSub = new java.sql.Date(dateUtilSub.getTime());
+			sub.DueDate = sqlDateSub;
+			sub.Taskname = "Task";
+			t.subtasks.add(sub);
+			tasks.add(t);
+			
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+	 	GanttChartExample example = new GanttChartExample("Gantt Chart Example",tasks);  
          example.setSize(800, 400);  
          example.setLocationRelativeTo(null);  
          example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);  
