@@ -129,7 +129,7 @@ public class CreateProjectForm {
 					p.startDay = startDay_TF.getText();
 					p.cost = Integer.parseInt(cost_TF.getText());
 					p.hoursPerDay = Integer.parseInt(hoursPerDay_TF.getText());
-					SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yyyy");  
+					SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
 					java.util.Date dateUtil = (Date) formatter.parse(startingDate_TF.getText());
 					java.sql.Date sqlDate = new java.sql.Date(dateUtil.getTime());
 					p.StartingDate = sqlDate;

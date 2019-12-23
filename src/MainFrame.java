@@ -140,7 +140,7 @@ public class MainFrame {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("");
-				AddTaskForm addTaskForm = new AddTaskForm(project.projectId);
+				AddTaskForm addTaskForm = new AddTaskForm(project.projectId , project);
 				frame.setVisible(false);
 			}
 		});

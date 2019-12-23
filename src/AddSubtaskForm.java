@@ -115,7 +115,7 @@ public class AddSubtaskForm {
 					t.Taskname = Subtask_TF.getText();
 					t.workinghours = Integer.parseInt(workingHours_TF.getText());
 					t.delivaerable = deliverable_TF.getText();
-					SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yyyy"); 
+					SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); 
 					java.util.Date dateUtil = (Date) formatter.parse(startDate_TF.getText());
 					java.sql.Date sqlDate = new java.sql.Date(dateUtil.getTime());
 					t.startDate = sqlDate;

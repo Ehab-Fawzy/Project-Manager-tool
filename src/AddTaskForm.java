@@ -2,12 +2,21 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Vector;
 import java.awt.event.ActionEvent;
 
 public class AddTaskForm {
@@ -20,6 +29,7 @@ public class AddTaskForm {
 	private JTextField deliverable_TF;
 	private JTextField taskName_TF;
 	private int projectID;
+	private Project current;
 	/**
 	 * Launch the application.
 	 */
@@ -47,6 +57,13 @@ public class AddTaskForm {
 		this.projectID = projectID;
 		initialize();
 		frame.setVisible(true);
+	}
+
+	public AddTaskForm(int projectId2, Project project) {
+		current = project;
+		this.projectID = projectId2;
+		initialize();
+		frame.setVisible(true);	
 	}
 
 	/**
@@ -105,20 +122,27 @@ public class AddTaskForm {
 		
 		JButton button = new JButton("Submit");
 		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {	
 				//Add Task to table1
 				try {
 					ProjectTask t = new ProjectTask();
 					t.Taskname = taskName_TF.getText();
 					t.workinghours = Integer.parseInt(workingHours_TF.getText());
 					t.delivaerable = deliverable_TF.getText();
-					SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yyyy"); 
+					SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); 
 					java.util.Date dateUtil = (Date) formatter.parse(startDate_TF.getText());
 					java.sql.Date sqlDate = new java.sql.Date(dateUtil.getTime());
 					t.startDate = sqlDate;
 					dateUtil = (Date) formatter.parse(dueDate_TF.getText());
 					sqlDate = new java.sql.Date(dateUtil.getTime());
 					t.DueDate = sqlDate;
+					
+					
+					if ( t.startDate.compareTo(current.StartingDate) < 0 ) {
+						showError("Start Data of task cannot be before the start date of project");
+						return;
+					}
+
 					t.addTask(projectID);
 					if (preID_TF.getText().length() != 0){
 						String[] split = preID_TF.getText().split(",");
@@ -146,5 +170,15 @@ public class AddTaskForm {
 		JLabel lblTaskName = new JLabel("Task name");
 		lblTaskName.setBounds(47, 72, 100, 14);
 		frame.getContentPane().add(lblTaskName);
+	}
+	
+	public static void showError( String _error ) {
+		final JPanel panel = new JPanel();
+	    JOptionPane.showMessageDialog(panel, _error, "Error", JOptionPane.ERROR_MESSAGE);   
+	}
+	
+	public static void showMessage( String _message , String title ) {
+		final JPanel panel = new JPanel();
+	    JOptionPane.showMessageDialog(panel, _message, title, JOptionPane.INFORMATION_MESSAGE);
 	}
 }

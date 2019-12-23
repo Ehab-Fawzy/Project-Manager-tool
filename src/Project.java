@@ -63,7 +63,9 @@ public class Project {
 			    this.hoursPerDay = rs.getInt("HoursPerDay") ;
 			    this.ActualProjectHours = rs.getInt("ActualProjectHours") ;	    
 		}
- 	
+		 
+		 System.out.println( "Flagggggg : " + this.projectId );
+		 
 			ProjectTask t = new ProjectTask () ;
 			tasks = t.load(projectId) ;
 		return this;
