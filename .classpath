@@ -6,11 +6,16 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/SqlDemo/sqljdbc_7.4/enu/mssql-jdbc-7.4.1.jre8.jar"/>
-	<classpathentry kind="lib" path="C:/SqlDemo/sqljdbc_7.4/enu/mssql-jdbc-7.4.1.jre8-shaded.jar"/>
-	<classpathentry kind="lib" path="C:/SqlDemo/sqljdbc_7.4/enu/mssql-jdbc-7.4.1.jre11.jar"/>
-	<classpathentry kind="lib" path="C:/SqlDemo/sqljdbc_7.4/enu/mssql-jdbc-7.4.1.jre11-shaded.jar"/>
-	<classpathentry kind="lib" path="C:/SqlDemo/sqljdbc_7.4/enu/mssql-jdbc-7.4.1.jre12.jar"/>
-	<classpathentry kind="lib" path="C:/SqlDemo/sqljdbc_7.4/enu/mssql-jdbc-7.4.1.jre12-shaded.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Khaled-Predator/Desktop/FCI/FCI - Y3 - T1/IS231 - Fundamentals of Information Systems/Assignment/Project Managment/Project-Manager-tool/lib/mssql-jdbc-7.4.1.jre8.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Khaled-Predator/Desktop/FCI/FCI - Y3 - T1/IS231 - Fundamentals of Information Systems/Assignment/Project Managment/Project-Manager-tool/lib/mssql-jdbc-7.4.1.jre8-shaded.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Khaled-Predator/Desktop/FCI/FCI - Y3 - T1/IS231 - Fundamentals of Information Systems/Assignment/Project Managment/Project-Manager-tool/lib/mssql-jdbc-7.4.1.jre11.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Khaled-Predator/Desktop/FCI/FCI - Y3 - T1/IS231 - Fundamentals of Information Systems/Assignment/Project Managment/Project-Manager-tool/lib/mssql-jdbc-7.4.1.jre11-shaded.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Khaled-Predator/Desktop/FCI/FCI - Y3 - T1/IS231 - Fundamentals of Information Systems/Assignment/Project Managment/Project-Manager-tool/lib/mssql-jdbc-7.4.1.jre12.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Khaled-Predator/Desktop/FCI/FCI - Y3 - T1/IS231 - Fundamentals of Information Systems/Assignment/Project Managment/Project-Manager-tool/lib/mssql-jdbc-7.4.1.jre12-shaded.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Khaled-Predator/Desktop/FCI/FCI - Y3 - T1/IS231 - Fundamentals of Information Systems/Assignment/Project Managment/Project-Manager-tool/lib/jcommon-0.8.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Khaled-Predator/Desktop/FCI/FCI - Y3 - T1/IS231 - Fundamentals of Information Systems/Assignment/Project Managment/Project-Manager-tool/lib/jfreechart-1.5.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Khaled-Predator/Desktop/FCI/FCI - Y3 - T1/IS231 - Fundamentals of Information Systems/Assignment/Project Managment/Project-Manager-tool/lib/jfreechart-1.5.0-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Khaled-Predator/Desktop/FCI/FCI - Y3 - T1/IS231 - Fundamentals of Information Systems/Assignment/Project Managment/Project-Manager-tool/lib/jgoodies-common-1.8.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Khaled-Predator/Desktop/FCI/FCI - Y3 - T1/IS231 - Fundamentals of Information Systems/Assignment/Project Managment/Project-Manager-tool/lib/jgoodies-forms-1.9.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

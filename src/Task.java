@@ -7,7 +7,7 @@ public class Task {
 	String Taskname ; 
 	int workinghours, ActualWorkingHours, TaskID; 
 	String delivaerable;
-	Date startDate, DueDate;
+	public Date startDate, DueDate;
 	public static Vector<Member> Members;
 	public static Vector<Task> subtasks;
 	public static Vector<Integer> predecessor;
