@@ -142,7 +142,19 @@ public class AddTaskForm {
 						showError("Start Data of task cannot be before the start date of project");
 						return;
 					}
-
+					
+					if ( t.DueDate.compareTo( current.DueDates ) > 0 ) {
+						showError("End Data of task cannot be After the end date of project");
+						return;
+					}
+					
+					if ( t.DueDate.compareTo( t.startDate ) < 0 ) {
+						showError("End Data of task cannot be before the start date of project");
+						return;
+					}
+					
+					
+					
 					t.addTask(projectID);
 					if (preID_TF.getText().length() != 0){
 						String[] split = preID_TF.getText().split(",");

@@ -10,6 +10,9 @@ import javax.swing.JTree;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import org.jfree.ui.RefineryUtilities;
+
 import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -37,6 +40,7 @@ public class MainFrame {
 	private static Project project;
 	private static Vector<ProjectTask> tasks;
 	private JTextField TaskID_TF;
+	private JButton refresh;
 
 	/**
 	 * Launch the application.
@@ -159,7 +163,8 @@ public class MainFrame {
 		JButton btnAddSubtask = new JButton("Add subtask");
 		btnAddSubtask.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				AddSubtaskForm form = new AddSubtaskForm();
+				
+				AddSubtaskForm form = new AddSubtaskForm( project.tasks );
 				frame.setVisible(false);
 			}
 		});
@@ -173,6 +178,21 @@ public class MainFrame {
 		});
 		
 		btnNewButton_3 = new JButton("Show Chart");
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					GanttChartExample demo = new GanttChartExample(project.name, project.tasks);
+					demo.pack();
+			        RefineryUtilities.centerFrameOnScreen(demo);
+			        demo.setVisible(true);
+			        demo.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
+
+				} catch (Throwable e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 		
 		btnNewButton_4 = new JButton("Assign Task Members");
 		btnNewButton_4.addActionListener(new ActionListener() {
@@ -200,6 +220,18 @@ public class MainFrame {
 		
 		TaskID_TF = new JTextField();
 		TaskID_TF.setColumns(10);
+		
+		refresh = new JButton("Refresh");
+		refresh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					loadData();
+				} catch (Throwable e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
@@ -219,24 +251,26 @@ public class MainFrame {
 							.addComponent(btnNewButton_3, GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
 							.addGap(10)
 							.addComponent(btnNewButton_4, GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
-							.addGap(13)
+							.addGap(18)
 							.addComponent(btnAddProjectMembers, GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
-							.addGap(176))
+							.addGap(171))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(btnAddSubtask, GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(btnNewButton_1, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
-							.addGap(316)))
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+							.addGap(18)
+							.addComponent(refresh, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE)
+							.addGap(172)))
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(btnNewButton, GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
 							.addGap(11)
 							.addComponent(memberTaskID_TF, GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE))
-						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(showSubTasks, GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
 							.addGap(12)
 							.addComponent(TaskID_TF, GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE))
-						.addComponent(scrollPane2, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE))
+						.addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE))
 					.addGap(33))
 		);
 		groupLayout.setVerticalGroup(
@@ -250,13 +284,14 @@ public class MainFrame {
 							.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)))
 					.addGap(8)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
-						.addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE))
+						.addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
+						.addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE))
 					.addGap(20)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 							.addComponent(btnAddSubtask)
-							.addComponent(btnNewButton_1))
+							.addComponent(btnNewButton_1)
+							.addComponent(refresh))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(1)
 							.addComponent(memberTaskID_TF, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
@@ -264,8 +299,9 @@ public class MainFrame {
 					.addGap(11)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addComponent(btnNewButton_3)
-						.addComponent(btnNewButton_4)
-						.addComponent(btnAddProjectMembers)
+						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+							.addComponent(btnNewButton_4)
+							.addComponent(btnAddProjectMembers))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(1)
 							.addComponent(TaskID_TF, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))

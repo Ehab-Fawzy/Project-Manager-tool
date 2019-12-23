@@ -2,11 +2,14 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Vector;
 import java.awt.event.ActionEvent;
 
 public class AddSubtaskForm {
@@ -19,10 +22,21 @@ public class AddSubtaskForm {
 	private JTextField dueDate_TF;
 	private JTextField deliverable_TF;
 	private JTextField TaskID_TF;
-
+	private static Vector<ProjectTask> parentAll;
+	private static ProjectTask parent;
+	
 	/**
 	 * Launch the application.
+	 * 
+	 * 
 	 */
+	
+	AddSubtaskForm( Vector<ProjectTask> tasks ){
+		parentAll = tasks;
+		initialize();
+		frame.setVisible(true);
+	}
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -110,6 +124,13 @@ public class AddSubtaskForm {
 		JButton submitBtn = new JButton("Submit");
 		submitBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				for ( int i = 0; i < parentAll.size(); ++i ) {
+					if ( parentAll.get(i).TaskID == Integer.parseInt( TaskID_TF.getText() ) ) {
+						parent = parentAll.get(i); break;
+					}
+				}
+				
 				try {
 					ProjectTask t = new ProjectTask();
 					t.Taskname = Subtask_TF.getText();
@@ -122,6 +143,24 @@ public class AddSubtaskForm {
 					dateUtil = (Date) formatter.parse(dueDate_TF.getText());
 					sqlDate = new java.sql.Date(dateUtil.getTime());
 					t.DueDate = sqlDate;
+					
+					
+					if ( t.startDate.compareTo(parent.startDate) < 0 ) {
+						showError("Start Data of subTask cannot be before the start date of Task");
+						return;
+					}
+					
+					if ( t.DueDate.compareTo( parent.DueDate ) > 0 ) {
+						showError("End Data of subTask cannot be After the end date of Task");
+						return;
+					}
+					
+					if ( t.DueDate.compareTo( t.startDate ) < 0 ) {
+						showError("End Data of subTask cannot be before the start date of subTask");
+						return;
+					}
+					
+					
 					t.addSubTask(Integer.parseInt(TaskID_TF.getText()));
 					MainFrame.showFrame();
 				} catch (Throwable t) {
@@ -141,5 +180,15 @@ public class AddSubtaskForm {
 		TaskID_TF.setColumns(10);
 		TaskID_TF.setBounds(169, 59, 197, 20);
 		frame.getContentPane().add(TaskID_TF);
+	}
+	
+	public static void showError( String _error ) {
+		final JPanel panel = new JPanel();
+	    JOptionPane.showMessageDialog(panel, _error, "Error", JOptionPane.ERROR_MESSAGE);   
+	}
+	
+	public static void showMessage( String _message , String title ) {
+		final JPanel panel = new JPanel();
+	    JOptionPane.showMessageDialog(panel, _message, title, JOptionPane.INFORMATION_MESSAGE);
 	}
 }
